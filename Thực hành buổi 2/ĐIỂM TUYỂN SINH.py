@@ -1,61 +1,61 @@
-n, m = map(int, input().split())
-a = [int(x) for x in input().split()]
+idx = 1
 
 
-def loop(i, exp):
-    if i == n:
-        res.append(exp)
-        return
-    num = a[i]
-    loop(i + 1, exp + f' + {num}')
-    loop(i + 1, exp + f' - {num}')
-    loop(i + 1, exp + f' * {num}')
+class Student:
+    id = 'TS'
+
+    def __init__(self, name, res, ethnic, area):
+        global idx
+        self.id += '{:02d}'.format(idx)
+        idx += 1
+        self.name = name
+        self.res = res
+        self.ethnic = ethnic
+        self.area = area
+        self.total = res + priority(ethnic, area)
+        self.stat = 'Do' if self.total >= 20.5 else 'Truot'
+
+    def output(self):
+        print(f'{self.id} {self.name} {self.total:.1f} {self.stat}')
 
 
-def check(s):
-    b = s.split()
-    while '*' in b:
-        for i in range(len(b)):
-            if b[i] == '*':  # những chỗ là dấu nhân thì thực hiện trước rồi thay vào vị trí đó
-                tmp = int(b[i - 1]) * int(b[i + 1])
-                idx = i
-                break
-        del b[idx + 1]
-        del b[idx]
-        del b[idx - 1]
-        b.insert(idx - 1, str(tmp))
-    res = int(b[0])
-    for i in range(1, len(b), 2):
-        if b[i] == '+':
-            res += int(b[i + 1])
-        elif b[i] == '-':
-            res -= int(b[i + 1])
-    return res
+def priority(ethnic, area):
+    ans = 0
+    if area == 1:
+        ans += 1.5
+    elif area == 2:
+        ans += 1.0
+    if ethnic != 'Kinh':
+        ans += 1.5
+    return ans
 
 
-def change(s):  # thêm dấu ngoặc cho số âm
-    res = ''
-    for i in s.split():
-        if i[0] == '-' and len(i) > 1:
-            res += f'({i})'
-        else:
-            res += i
-    return res
+def standard(s):
+    s = s.strip()
+    while '  ' in s:
+        s = s.replace('  ', ' ')
+    return s.title()
 
 
-res = []
-loop(1, str(a[0]))
-chk = 0
-for i in res:
-    if check(i) == m:
-        chk = 1
-        print(''.join(change(i)), end='')
-        print(f'={m}')
-if chk == 0:
-    print('IMPOSSIBLE')
+n = int(input())
+lst = []
+while n > 0:
+    name = standard(input())
+    res = float(input())
+    ethnic = input()
+    area = int(input())
+    lst.append(Student(name, res, ethnic, area))
+    n -= 1
 
-# tttt = '1 -2 3 -4 -5'
-# print(change(tttt))
-
-# 5 20
-# 1 2 3 4 5
+lst = sorted(lst, key=lambda x: (-x.total, x.id))
+for i in lst:
+    i.output()
+# 2
+# Nguyen  hong ngat
+# 22
+# Kinh
+# 1
+#   Chu thi MINh
+# 14
+# Dao
+# 3
